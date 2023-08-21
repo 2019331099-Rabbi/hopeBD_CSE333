@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        .search-container {
+            position: relative;
+        }
+
+        .suggestions {
+            position: absolute;
+            width: 100%;
+            top: 100%;
+            /* Position suggestions below the search box */
+            left: 0;
+            z-index: 1000;
+        }
+    </style>
+    <title>hopeBD</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">hopeBD</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    {{#if user}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/logout">Logout</a>
+                    </li>
+                    {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Register
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/registerD">Donor</a></li>
+                            <li><a class="dropdown-item" href="/registerC">Collector</a></li>
+                        </ul>
+                    </li>
+                    {{/if}}
+                </ul>
+                <div class="search-container position-relative">
+                    <form class="d-flex" action="/utils/searchCollector" method="post">
+                        <input id="autocomplete_search" class="form-control me-2" type="search" name="searchCQ"
+                            placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <input type="hidden" id="selected_collector_id" name="selectedCollectorId">
+                    </form>
+                    <div id="search_result" class="list-group list-group-flush suggestions"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <br><br>
+    <h1>This is home page</h1>
+    <script>
+    const autocompleteInput = document.getElementById('autocomplete_search');
+    const suggestionsDiv = document.getElementById('search_result');
+    const selectedCollectorIdInput = document.getElementById('selected_collector_id');
+
+    autocompleteInput.addEventListener('input', async () => {
+        const query = autocompleteInput.value.trim();
+
+        if (query !== '') {
+            fetch(`/utils/suggest?query=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsDiv.innerHTML = data.map(collector => {
+                        return `<a href="#" class="list-group-item list-group-item-action suggestion" data-collector-id="${collector.id}">
+                            ${collector.name}
+                        </a>`;
+                    }).join('');
+                })
+                .catch(error => {
+                    console.error('Error fetching suggestions:', error);
+                    suggestionsDiv.innerHTML = 'Error fetching suggestions';
+                });
+        } else {
+            suggestionsDiv.innerHTML = '';
+        }
+    });
+
+    suggestionsDiv.addEventListener('click', (event) => {
+        if (event.target.classList.contains('suggestion')) {
+            const selectedCollector = event.target.textContent.trim(); // Remove leading/trailing spaces
+            const selectedCollectorId = event.target.getAttribute('data-collector-id');
+
+            autocompleteInput.value = selectedCollector;
+            suggestionsDiv.innerHTML = '';
+
+            selectedCollectorIdInput.value = selectedCollectorId;
+        }
+    });
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

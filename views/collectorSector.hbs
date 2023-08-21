@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>hopeBD</title>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="d-flex justify-content-center">
+                        <img src="/org.png" class="card-img-top" alt="avatar" style="width: 70%;">
+                    </div>
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <h5 class="card-title text-center">{{collectorName}}</h5>
+                        <p class="card-text">This is a testing project for learning purpose.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    {{#each sectors}}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100" style="width: 18rem;">
+                            <img src="/org.png" class="card-img-top" alt="Sector Image">
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.sector_name}}</h5>
+                                <p class="card-text overflow-hidden">{{this.slogan}}</p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <p class="mb-0">{{this.total_collection}} BDT</p>
+                                <a href="#" class="btn btn-primary donate-btn" data-sector-id="{{this.id}}"
+                                    data-collector-id="{{this.collector_id}}">
+                                    Donate
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get all the "Donate" buttons
+        const donateButtons = document.querySelectorAll('.donate-btn');
+
+        // Add a click event listener to each "Donate" button
+        donateButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Get the sector ID and collector ID from the data attributes
+                const sectorId = this.getAttribute('data-sector-id');
+                const collectorId = this.getAttribute('data-collector-id');
+
+                // Build the URL with query parameters
+                const url = `/utils/donateSector?sectorId=${sectorId}&collectorId=${collectorId}`;
+
+                // Redirect to the backend URL with the query parameters
+                window.location.href = url;
+            });
+        });
+    </script>
+
+</body>
+
+</html>

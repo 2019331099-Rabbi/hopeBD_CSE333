@@ -1,0 +1,52 @@
+CREATE TABLE IF NOT EXISTS useremail (
+    id INT AUTO_INCREMENT NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    user_type ENUM('donor', 'collector') NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS donor (
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email_id INT NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (email_id) REFERENCES useremail(id)
+);
+
+CREATE TABLE IF NOT EXISTS collector (
+    id INT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email_id INT NOT NULL,
+    phone VARCHAR(255),
+    district VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (email_id) REFERENCES useremail(id)
+);
+
+CREATE TABLE IF NOT EXISTS donation_sector (
+    id INT AUTO_INCREMENT NOT NULL,
+    collector_id INT NOT NULL,
+    sector_name VARCHAR(255) NOT NULL,
+    total_collection DECIMAL(10, 2) DEFAULT 0.00, -- Total donation collection in BDT
+    slogan TEXT, -- The slogan of the sector (supports large text)
+    PRIMARY KEY (id),
+    FOREIGN KEY (collector_id) REFERENCES collector(id)
+);
+
+CREATE TABLE IF NOT EXISTS payment (
+    id INT AUTO_INCREMENT NOT NULL,
+    donor_id INT NOT NULL,
+    collector_id INT NOT NULL,
+    sector_id INT NOT NULL,
+    donation_date DATETIME NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL,
+    payment_type VARCHAR(255) DEFAULT 'visible',
+    provider VARCHAR(255) NOT NULL,
+    transaction_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (donor_id) REFERENCES donor(id),
+    FOREIGN KEY (collector_id) REFERENCES collector(id),
+    FOREIGN KEY (sector_id) REFERENCES donation_sector(id) ON DELETE CASCADE
+);
