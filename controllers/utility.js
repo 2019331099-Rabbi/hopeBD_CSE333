@@ -1,3 +1,4 @@
+const { nextTick } = require('process');
 const myDB = require('../models/dbConnect');
 
 exports.loadCollector = async (req, res) => {
@@ -98,7 +99,9 @@ exports.deleteSector = async (req, res) => {
 exports.addSector = async (req, res) => {
     const { sname, slogan, collectorId } = req.body;
 
-    const insertQuery = 'INSERT INTO donation_sector (collector_id, sector_name, total_collection, slogan) VALUES (?, ?, 0.00, ?)';
+    const insertQuery = `INSERT INTO donation_sector (collector_id, sector_name, creation_date, total_collection, slogan)
+    VALUES (?, ?, NOW(), 0.00, ?)`;
+    
     myDB.query(insertQuery, [collectorId, sname, slogan], (error, results) => {
         if (error) {
             console.error('Error inserting sector:', error);
@@ -174,10 +177,7 @@ exports.makeDonation = async (req, res) => {
     });
 };
 
-
-
 const crypto = require('crypto');
-
 function generateTransaction() {
     const transactionLength = 8; // Length of the desired transaction string
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -190,3 +190,7 @@ function generateTransaction() {
     
     return transaction;
 }
+
+exports.recentSectors = async (req, res, next) => {
+    next();
+};

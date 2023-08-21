@@ -1,5 +1,6 @@
 const myDB = require('../models/dbConnect');
 const bcrypt = require('bcryptjs');
+const { log } = require('console');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
@@ -79,6 +80,7 @@ exports.registerC = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const {email, password} = req.body;
+        console.log(email, password);
         if (!email || !password) {
             return res.status(400).render('login', {
                 message: "Please provide email and password"

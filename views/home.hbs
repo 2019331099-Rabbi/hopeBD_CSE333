@@ -74,47 +74,74 @@
         </div>
     </nav>
 
-    <br><br>
-    <h1>This is home page</h1>
+    <div class="container mt-4">
+        <div class="row">
+
+            <div class="col-md-8">
+                {{#each sectors}}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100" style="width: 18rem;">
+                        <img src="/org.png" class="card-img-top" alt="Sector Image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{this.sector_name}}</h5>
+                            <p class="card-text overflow-hidden">{{this.slogan}}</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <p class="mb-0">{{this.total_collection}} BDT</p>
+                            <a href="#" class="btn btn-primary donate-btn" data-sector-id="{{this.id}}"
+                                data-collector-id="{{this.collector_id}}">
+                                Donate
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
     <script>
-    const autocompleteInput = document.getElementById('autocomplete_search');
-    const suggestionsDiv = document.getElementById('search_result');
-    const selectedCollectorIdInput = document.getElementById('selected_collector_id');
+        const autocompleteInput = document.getElementById('autocomplete_search');
+        const suggestionsDiv = document.getElementById('search_result');
+        const selectedCollectorIdInput = document.getElementById('selected_collector_id');
 
-    autocompleteInput.addEventListener('input', async () => {
-        const query = autocompleteInput.value.trim();
+        autocompleteInput.addEventListener('input', async () => {
+            const query = autocompleteInput.value.trim();
 
-        if (query !== '') {
-            fetch(`/utils/suggest?query=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    suggestionsDiv.innerHTML = data.map(collector => {
-                        return `<a href="#" class="list-group-item list-group-item-action suggestion" data-collector-id="${collector.id}">
+            if (query !== '') {
+                fetch(`/utils/suggest?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsDiv.innerHTML = data.map(collector => {
+                            return `<a href="#" class="list-group-item list-group-item-action suggestion" data-collector-id="${collector.id}">
                             ${collector.name}
                         </a>`;
-                    }).join('');
-                })
-                .catch(error => {
-                    console.error('Error fetching suggestions:', error);
-                    suggestionsDiv.innerHTML = 'Error fetching suggestions';
-                });
-        } else {
-            suggestionsDiv.innerHTML = '';
-        }
-    });
+                        }).join('');
+                    })
+                    .catch(error => {
+                        console.error('Error fetching suggestions:', error);
+                        suggestionsDiv.innerHTML = 'Error fetching suggestions';
+                    });
+            } else {
+                suggestionsDiv.innerHTML = '';
+            }
+        });
 
-    suggestionsDiv.addEventListener('click', (event) => {
-        if (event.target.classList.contains('suggestion')) {
-            const selectedCollector = event.target.textContent.trim(); // Remove leading/trailing spaces
-            const selectedCollectorId = event.target.getAttribute('data-collector-id');
+        suggestionsDiv.addEventListener('click', (event) => {
+            if (event.target.classList.contains('suggestion')) {
+                const selectedCollector = event.target.textContent.trim(); // Remove leading/trailing spaces
+                const selectedCollectorId = event.target.getAttribute('data-collector-id');
 
-            autocompleteInput.value = selectedCollector;
-            suggestionsDiv.innerHTML = '';
+                autocompleteInput.value = selectedCollector;
+                suggestionsDiv.innerHTML = '';
 
-            selectedCollectorIdInput.value = selectedCollectorId;
-        }
-    });
-</script>
+                selectedCollectorIdInput.value = selectedCollectorId;
+            }
+        });
+    </script>
+    <script>
+        
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
