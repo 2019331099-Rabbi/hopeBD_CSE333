@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const authController = require('../controllers/auth');
+const utils = require('../controllers/utility');
 
-router.get("/", authController.isLoggedIn, (req, res) => {
+router.get("/", authController.isLoggedIn, utils.recentSectors, (req, res) => {
     res.render("home", {
-        user: req.user
+        user: req.user,
+        sectors: req.sectors
     });
 });
 
