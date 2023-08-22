@@ -10,11 +10,20 @@ app.set('view engine', 'hbs');
 const publicDirectory = path.join(__dirname, './public');
 app.use(express.static(publicDirectory));
 
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+
+// app.get("/", (req, res) => {
+//     res.render('test');
+// })
+
+
 app.use("/", require('./routes/pages'));
+app.use("/admin", require('./routes/admin'));
 app.use("/auth", require('./routes/auth'));
 app.use("/utils", require('./routes/utils'));
 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>hopeBD</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">hopeBD</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    {{#if user_name}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/auth/logout">Logout</a>
+                    </li>
+                    {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    {{/if}}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1>{{user_name}}</h1>
+    <h1>{{sector.sector_id}}</h1>
+    <h1>{{sector.sector_name}}</h1>
+    <h1>{{sector.creation_date}}</h1>
+    <h1>{{sector.slogan}}</h1>
+    <h1>{{sector.collector_name}}</h1>
+    <h1>{{sector.phone}}</h1>
+    <h1>{{sector.district}}</h1>
+
+    <form action="/admin/acceptSector" method="POST">
+        <input type="hidden" name="sectorId" value="{{sector.sector_id}}">
+        <input type="hidden" name="collectorId" value="{{sector.collector_id}}">
+        <button type="submit" class="btn btn-danger">Accept</button>
+    </form>
+    <form action="/admin/deleteSector" method="POST">
+        <input type="hidden" name="sectorId" value="{{sector.sector_id}}">
+        <input type="hidden" name="collectorId" value="{{sector.collector_id}}">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+</body>
+</html>
