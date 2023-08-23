@@ -53,18 +53,30 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-8 offset-md-2">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{sector.sector_name}}</h5>
-                        <p class="card-text">{{sector.slogan}}</p>
-                        <p class="card-text">Collector ID: {{collectorId}}</p>
-                        <!-- Other sector details you want to display -->
+                <div class="card h-100">
+                    <img src="/sectorimg/{{sector.photo}}" class="card-img-top" alt="Sector Image">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                {{sector.sector_name}}
+                            </h5>
+                            {{#if sector.is_verified}}
+                            <div class="icon-container">
+                                <i class="fa-solid fa-square-check text-success fa-lg"></i>
+                            </div>
+                            {{/if}}
+                        </div>
+                        <p class="card-text overflow-hidden">{{sector.slogan}}</p>
+
+                        
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <p class="mb-0">{{sector.total_collection}} BDT</p>
                         <form action="/utils/deleteSector" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="sectorId" value="{{sector.id}}">
                             <input type="hidden" name="collectorId" value="{{user.id}}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
-
+                    </div>
                     </div>
                 </div>
             </div>

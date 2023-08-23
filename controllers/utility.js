@@ -6,16 +6,25 @@ exports.loadCollector = async (req, res) => {
     const collectorId = req.body.selectedCollectorId;
     const sectorsQuery = 'SELECT * FROM donation_sector WHERE collector_id = ?';
 
-    myDB.query(sectorsQuery, [collectorId], (error, results) => {
+    myDB.query(sectorsQuery, [collectorId], (error, sectorResults) => {
         if (error) {
             console.error('Error fetching sectors:', error);
         }
         else {
-            const sectors = results;
-            return res.status(200).render("collectorSector", {
-                collectorName: collectorName,
-                sectors: sectors
-            });
+            const collectorQuery = `
+            SELECT name, phone, district, profile_photo
+            FROM collector 
+            WHERE id = ?;`;
+            myDB.query(collectorQuery, [collectorId], (error, collctorResults) => {
+                if (error) console.log(error);
+                else {
+                    return res.status(200).render("collectorSector", {
+                        collector: collctorResults[0],
+                        sectors: sectorResults,
+                        user: req.user
+                    });
+                }
+            })
         }
     }
     );
@@ -99,17 +108,29 @@ exports.deleteSector = async (req, res) => {
 exports.addSector = async (req, res) => {
     const { sname, slogan, collectorId } = req.body;
 
-    const insertQuery = `INSERT INTO donation_sector (collector_id, sector_name, creation_date, total_collection, slogan)
-    VALUES (?, ?, NOW(), 0.00, ?)`;
+    const projectPhoto = req.files.projectPhoto;
+    const uploadPath = __dirname + '/..' + '/upload/' + 'sectorimg/' + projectPhoto.name;
+    console.log(uploadPath);
+    console.log(projectPhoto);
 
-    myDB.query(insertQuery, [collectorId, sname, slogan], (error, results) => {
-        if (error) {
-            console.error('Error inserting sector:', error);
-            // Handle the error appropriately
-        } else {
-            console.log('Sector inserted successfully');
-            // Redirect to a suitable page after adding the sector
-            res.redirect('/profile'); // Replace with your desired destination
+    // use mv() to place the file on the server
+    projectPhoto.mv(uploadPath, (err) => {
+        if (err) {
+            return res.status(500).send("Error in inserting photo");
+        }
+        else {
+            const insertQuery = `INSERT INTO donation_sector (collector_id, sector_name, creation_date, total_collection, slogan, photo)
+            VALUES (?, ?, NOW(), 0.00, ?, ?)`;
+            myDB.query(insertQuery, [collectorId, sname, slogan, projectPhoto.name], (error, results) => {
+                if (error) {
+                    console.error('Error inserting sector:', error);
+                    // Handle the error appropriately
+                } else {
+                    console.log('Sector inserted successfully');
+                    // Redirect to a suitable page after adding the sector
+                    res.redirect('/profile'); // Replace with your desired destination
+                }
+            });
         }
     });
 }

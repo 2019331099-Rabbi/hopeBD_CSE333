@@ -16,11 +16,14 @@ router.get('/sectorDetails', authController.isLoggedIn, (req, res) => {
         ds.total_collection,
         ds.slogan,
         ds.is_verified,
+        ds.photo as sector_photo,
         c.id AS collector_id,
         c.name AS collector_name,
         c.email_id,
         c.phone,
-        c.district
+        c.district,
+        c.profile_photo,
+        c.validation_photo
     FROM donation_sector ds
     INNER JOIN collector c ON ds.collector_id = c.id
     WHERE ds.id = ?;`;
@@ -30,7 +33,7 @@ router.get('/sectorDetails', authController.isLoggedIn, (req, res) => {
             console.error('Error fetching sector details:', error);
             return res.status(500).send('Error fetching sector details');
         }
-        // console.log(sectorResult);
+        console.log(sectorResult);
         res.render('sectorDetailsAdmin', {
             sector: sectorResult[0],
             user_name: req.user_name

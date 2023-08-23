@@ -81,7 +81,11 @@
             {{#each sectors}}
             <div class="col-md-6 mb-4">
                 <div class="card h-100" style="width: 18rem;">
-                    <img src="/img/org.png" class="card-img-top" alt="Sector Image">
+                    {{#if this.photo}}
+                            <img src="/sectorimg/{{this.photo}}" class="card-img-top" alt="avatar" style="width: 70%;">
+                        {{else}}
+                            <img src="/img/org.png" class="card-img-top" alt="avatar" style="width: 70%;">
+                    {{/if}}
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">

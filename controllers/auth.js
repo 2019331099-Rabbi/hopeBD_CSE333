@@ -151,7 +151,7 @@ exports.login = async (req, res) => {
                         httpOnly: true
                     };
                     res.cookie('jwt', token, cookieOptions);
-                    res.redirect("/");
+                    res.redirect("/profile");
                 });
             }
             else {

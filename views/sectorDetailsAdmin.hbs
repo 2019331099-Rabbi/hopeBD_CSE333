@@ -44,6 +44,10 @@
     <h1>{{sector.collector_name}}</h1>
     <h1>{{sector.phone}}</h1>
     <h1>{{sector.district}}</h1>
+    <img src="/sectorimg/{{sector.sector_photo}}" alt="sector_image">
+    <img src="/collectorimg/{{sector.profile_photo}}" alt="collector_profile">
+    <img src="/collectorimg/{{sector.validation_photo}}" alt="validation_photo">
+
 
     <form action="/admin/acceptSector" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="sectorId" value="{{sector.sector_id}}">
