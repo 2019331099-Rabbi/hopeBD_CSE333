@@ -45,7 +45,7 @@
     <h1>{{sector.phone}}</h1>
     <h1>{{sector.district}}</h1>
 
-    <form action="/admin/acceptSector" method="POST">
+    <form action="/admin/acceptSector" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="sectorId" value="{{sector.sector_id}}">
         <input type="hidden" name="collectorId" value="{{sector.collector_id}}">
         <button type="submit" class="btn btn-danger">Accept</button>
