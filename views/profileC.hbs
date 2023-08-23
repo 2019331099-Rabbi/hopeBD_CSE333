@@ -80,14 +80,13 @@
                     <div class="col-md-6 mb-4">
                         <div class="card h-100">
                             <div class="card-body d-flex justify-content-center align-items-center">
-                                <form action="/utils/newSector" method="POST" class="card-title">
+                                <form action="/utils/newSector" method="POST" enctype="multipart/form-data" class="card-title">
                                     <input type="hidden" name="collectorId" value="{{user.id}}">
                                     <button type="submit" class="btn btn-primary">Add New Sector</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

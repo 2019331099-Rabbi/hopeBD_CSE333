@@ -50,7 +50,7 @@
         <input type="hidden" name="collectorId" value="{{sector.collector_id}}">
         <button type="submit" class="btn btn-danger">Accept</button>
     </form>
-    <form action="/admin/deleteSector" method="POST">
+    <form action="/admin/deleteSector" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="sectorId" value="{{sector.sector_id}}">
         <input type="hidden" name="collectorId" value="{{sector.collector_id}}">
         <button type="submit" class="btn btn-danger">Delete</button>
