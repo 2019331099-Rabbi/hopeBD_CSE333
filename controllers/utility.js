@@ -101,7 +101,7 @@ exports.addSector = async (req, res) => {
 
     const insertQuery = `INSERT INTO donation_sector (collector_id, sector_name, creation_date, total_collection, slogan)
     VALUES (?, ?, NOW(), 0.00, ?)`;
-    
+
     myDB.query(insertQuery, [collectorId, sname, slogan], (error, results) => {
         if (error) {
             console.error('Error inserting sector:', error);
@@ -163,7 +163,7 @@ exports.makeDonation = async (req, res) => {
                 UPDATE donation_sector
                 SET total_collection = total_collection + ?
                 WHERE id = ?`;
-            
+
             myDB.query(updateTotalCollectionQuery, [amount, sectorId], (updateError, updateResult) => {
                 if (updateError) {
                     console.error('Error updating total_collection:', updateError);
@@ -181,16 +181,35 @@ const crypto = require('crypto');
 function generateTransaction() {
     const transactionLength = 8; // Length of the desired transaction string
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    
+
     let transaction = '';
     for (let i = 0; i < transactionLength; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         transaction += characters[randomIndex];
     }
-    
+
     return transaction;
 }
 
 exports.recentSectors = async (req, res, next) => {
-    next();
+    if (req.type == 'admin') {
+        next();
+    }
+    else {
+        const sectorQuery = `
+        SELECT *
+        FROM donation_sector
+        WHERE is_verified = 1
+        ORDER BY creation_date DESC
+        LIMIT 4;`;
+        myDB.query(sectorQuery, (error, results) => {
+            if (error) {
+                console.error('Error fetching sectors:', error);
+            }
+            else {
+                req.sectors = results;
+                next();
+            }
+        });
+    }
 };

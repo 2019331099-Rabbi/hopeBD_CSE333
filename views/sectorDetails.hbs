@@ -59,7 +59,7 @@
                         <p class="card-text">{{sector.slogan}}</p>
                         <p class="card-text">Collector ID: {{collectorId}}</p>
                         <!-- Other sector details you want to display -->
-                        <form action="/utils/deleteSector" method="POST">
+                        <form action="/utils/deleteSector" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="sectorId" value="{{sector.id}}">
                             <input type="hidden" name="collectorId" value="{{user.id}}">
                             <button type="submit" class="btn btn-danger">Delete</button>

@@ -4,10 +4,18 @@ const authController = require('../controllers/auth');
 const utils = require('../controllers/utility');
 
 router.get("/", authController.isLoggedIn, utils.recentSectors, (req, res) => {
-    res.render("home", {
-        user: req.user,
-        sectors: req.sectors
-    });
+    if (req.type == 'admin') {
+        res.render("adminHome", {
+            user_name: req.user_name,
+            pendingSectors: req.pendingSectors
+        })
+    }
+    else {
+        res.render("home", {
+            user: req.user,
+            sectors: req.sectors
+        });
+    }
 });
 
 router.get("/registerD", (req, res) => {

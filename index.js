@@ -1,20 +1,27 @@
-const express = require("express");
-const path = require('path');
+const express = require('express');
+const exphbs = require('express-handlebars');
+const fileUpload = require('express-fileupload');
 const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
-dotenv.config({ path: "./.env" });
+
 const app = express();
 
-app.set('view engine', 'hbs');
-const publicDirectory = path.join(__dirname, './public');
-app.use(express.static(publicDirectory));
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// default option
+app.use(fileUpload());
 app.use(cookieParser());
 
+// .env
+dotenv.config({ path: "./.env" });
+
+// static files
+app.use(express.static('public'));
+app.use(express.static('upload'));
+
+// Template engine
+app.set('view engine', 'hbs');
+
 app.use("/", require('./routes/pages'));
+app.use("/admin", require('./routes/admin'));
 app.use("/auth", require('./routes/auth'));
 app.use("/utils", require('./routes/utils'));
 

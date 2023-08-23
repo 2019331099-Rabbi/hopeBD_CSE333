@@ -10,13 +10,13 @@ exports.registerD = async (req, res) => {
     const existUser = "SELECT email FROM useremail WHERE email = ?";
     myDB.query(existUser, [email], async (error, results) => {
         if (error) {
-            return res.status(500).render('registerDonor', {message: "Internal server error"});
+            return res.status(500).render('registerDonor', { message: "Internal server error" });
         }
         else if (results.length > 0) {
-            return res.render('registerDonor', {message: "This email is already in use"});   
+            return res.render('registerDonor', { message: "This email is already in use" });
         }
         else if (password !== passwordConfirm) {
-            return res.render('registerDonor', {message: "Password don't match"});
+            return res.render('registerDonor', { message: "Password don't match" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,19 +24,19 @@ exports.registerD = async (req, res) => {
         const insertUser = "INSERT INTO donor (name, email_id, password) VALUES (?, ?, ?)";
 
         myDB.query(insertEmail, [email, 'donor'], async (error, results) => {
-                if (error) console.log(error);
-                else {
-                    myDB.query(insertUser, [name, results.insertId, hashedPassword], async (error, results) => {
-                            if (error) console.log(error);
-                            else {
-                                return res.status(200).render("registerDonor", {
-                                    message: "User successfully registered",
-                                });
-                            }
-                        }
-                    );
+            if (error) console.log(error);
+            else {
+                myDB.query(insertUser, [name, results.insertId, hashedPassword], async (error, results) => {
+                    if (error) console.log(error);
+                    else {
+                        return res.status(200).render("registerDonor", {
+                            message: "User successfully registered",
+                        });
+                    }
                 }
+                );
             }
+        }
         );
     });
 }
@@ -46,13 +46,13 @@ exports.registerC = async (req, res) => {
     const existUser = "SELECT email FROM useremail WHERE email = ?";
     myDB.query(existUser, [email], async (error, results) => {
         if (error) {
-            return res.status(500).render('registerDonor', {message: "Internal server error"});
+            return res.status(500).render('registerDonor', { message: "Internal server error" });
         }
         else if (results.length > 0) {
-            return res.render('registerCollector', {message: "This email is already in use"});   
+            return res.render('registerCollector', { message: "This email is already in use" });
         }
         else if (password !== passwordConfirm) {
-            return res.render('registerCollector', {message: "Password don't match"});
+            return res.render('registerCollector', { message: "Password don't match" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -60,26 +60,26 @@ exports.registerC = async (req, res) => {
         const insertUser = "INSERT INTO collector (name, email_id, phone, district, password) VALUES (?, ?, ?, ?, ?)";
 
         myDB.query(insertEmail, [email, 'collector'], async (error, results) => {
-                if (error) console.log(error);
-                else {
-                    myDB.query(insertUser, [name, results.insertId, phone, district, hashedPassword], async (error, results) => {
-                            if (error) console.log(error);
-                            else {
-                                return res.status(200).render("registerCollector", {
-                                    message: "Collector successfully registered",
-                                });
-                            }
-                        }
-                    );
+            if (error) console.log(error);
+            else {
+                myDB.query(insertUser, [name, results.insertId, phone, district, hashedPassword], async (error, results) => {
+                    if (error) console.log(error);
+                    else {
+                        return res.status(200).render("registerCollector", {
+                            message: "Collector successfully registered",
+                        });
+                    }
                 }
+                );
             }
+        }
         );
     });
 }
 
 exports.login = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         console.log(email, password);
         if (!email || !password) {
             return res.status(400).render('login', {
@@ -107,7 +107,7 @@ exports.login = async (req, res) => {
                             message: "Internal Server Error"
                         });
                     }
-                    
+
                     if (!(await bcrypt.compare(password, resultsP[0].password))) {
                         return res.status(401).render('login', {
                             message: "Password is incorrect"
@@ -117,9 +117,9 @@ exports.login = async (req, res) => {
                     const token = jwt.sign({ email_id }, process.env.JWT_SECRET, {
                         expiresIn: process.env.JWT_TOKEN_EXPIRESIN
                     });
-        
+
                     const cookieOptions = {
-                        exprires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES*24*60*60*1000),
+                        exprires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
                         httpOnly: true
                     };
                     res.cookie('jwt', token, cookieOptions);
@@ -127,7 +127,7 @@ exports.login = async (req, res) => {
                 });
             }
 
-            else {
+            else if (results[0].user_type === 'collector') {
                 const logInfo = "(SELECT * FROM collector WHERE email_id = ?);";
                 myDB.query(logInfo, [results[0].id], async (error, resultsP) => {
                     if (error) {
@@ -135,7 +135,7 @@ exports.login = async (req, res) => {
                             message: "Internal Server Error"
                         });
                     }
-                    
+
                     if (!(await bcrypt.compare(password, resultsP[0].password))) {
                         return res.status(401).render('login', {
                             message: "Password is incorrect"
@@ -145,17 +145,30 @@ exports.login = async (req, res) => {
                     const token = jwt.sign({ email_id }, process.env.JWT_SECRET, {
                         expiresIn: process.env.JWT_TOKEN_EXPIRESIN
                     });
-        
+
                     const cookieOptions = {
-                        exprires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES*24*60*60*1000),
+                        exprires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
                         httpOnly: true
                     };
                     res.cookie('jwt', token, cookieOptions);
                     res.redirect("/");
                 });
             }
+            else {
+                const email_id = results[0].id;
+                const token = jwt.sign({ email_id }, process.env.JWT_SECRET, {
+                    expiresIn: process.env.JWT_TOKEN_EXPIRESIN
+                });
+
+                const cookieOptions = {
+                    exprires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000),
+                    httpOnly: true
+                };
+                res.cookie('jwt', token, cookieOptions);
+                res.redirect("/");
+            }
         });
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -183,7 +196,7 @@ exports.isLoggedIn = async (req, res, next) => {
                             next(); // Call next() here
                         });
                     }
-                    else {
+                    else if (userResults[0].user_type === 'collector') {
                         const collectorData = 'SELECT * FROM collector WHERE email_id = ?';
                         myDB.query(collectorData, [userResults[0].id], async (error, collectorResults) => {
                             req.user = collectorResults[0];
@@ -194,6 +207,34 @@ exports.isLoggedIn = async (req, res, next) => {
                                 req.sectors = sectorsResult;
                                 next();
                             })
+                        });
+                    }
+                    else {
+                        const pendingRequest = `
+                        SELECT
+                            ds.id AS sector_id,
+                            ds.collector_id,
+                            ds.sector_name,
+                            c.name AS collector_name
+                        FROM
+                            donation_sector ds
+                        INNER JOIN
+                            collector c ON ds.collector_id = c.id
+                        WHERE
+                            ds.is_verified = 0;`;
+                        myDB.query(pendingRequest, async (error, pendingSectors) => {
+                            if (error) {
+                                console.log(error);
+                            }
+                            else {
+                                console.log(pendingSectors);
+                                req.user_name = 'admin';
+                                    req.type = 'admin';
+                                if (pendingSectors.length) {
+                                    req.pendingSectors = pendingSectors;
+                                }
+                                next(); // Call next() here
+                            }
                         });
                     }
                 }

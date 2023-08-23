@@ -3,7 +3,7 @@ USE donationmanagement;
 CREATE TABLE IF NOT EXISTS useremail (
     id INT AUTO_INCREMENT NOT NULL,
     email VARCHAR(255) NOT NULL,
-    user_type ENUM('donor', 'collector') NOT NULL,
+    user_type ENUM('donor', 'collector', 'admin') NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS donor (
     email_id INT NOT NULL,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (email_id) REFERENCES useremail(id)
+    FOREIGN KEY (email_id) REFERENCES useremail(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS collector (
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS collector (
     district VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (email_id) REFERENCES useremail(id)
+    FOREIGN KEY (email_id) REFERENCES useremail(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS donation_sector (
@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS donation_sector (
     sector_name VARCHAR(255) NOT NULL,
     creation_date DATETIME NOT NULL,
     total_collection DECIMAL(10, 2) DEFAULT 0.00,
-    slogan TEXT, 
+    slogan TEXT,
+    is_verified BOOLEAN DEFAULT 0,
     PRIMARY KEY (id),
     FOREIGN KEY (collector_id) REFERENCES collector(id)
 );
