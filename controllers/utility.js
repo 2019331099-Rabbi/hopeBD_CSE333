@@ -1,5 +1,5 @@
-const { nextTick } = require('process');
 const myDB = require('../models/dbConnect');
+const { v4: uuidv4 } = require('uuid');
 
 exports.loadCollector = async (req, res) => {
     const collectorName = req.body.searchCQ;
@@ -164,20 +164,77 @@ exports.sectorDetails = async (req, res) => {
     });
 }
 
+const SSLCommerzPayment = require('sslcommerz-lts')
+const store_id = 'hopeb64e608aeca1ed'
+const store_passwd = 'hopeb64e608aeca1ed@ssl'
+const is_live = false //true for live, false for sandbox
+
 exports.makeDonation = async (req, res) => {
-    const { donorId, collectorId, sectorId, amount, paymentType, paymentGateway } = req.body;
+    const {amount, paymentType, paymentGateway } = req.body;
+    const donorId = req.query.donorId;
+    const collectorId = req.query.collectorId;
+    const sectorId = req.query.sectorId;
+    // console.log(req.body);
+
+    const donorQuery = `SELECT name FROM donor WHERE id = ?`;
+    myDB.query(donorQuery, [donorId], (err, donorResults) => {
+        if (err) console.log(err);
+        else {
+            const name = donorResults[0].name;
+            const tran_id = uuidv4();
+            const data = {
+                total_amount: amount,
+                currency: 'BDT',
+                tran_id: tran_id, // use unique tran_id for each api call
+                success_url: `http://localhost:5001/utils/payment/success?tran_id=${tran_id}&donorId=${donorId}&sectorId=${sectorId}&collectorId=${collectorId}&amount=${amount}&paymentType=${paymentType}&paymentGateway=${paymentGateway}`,
+                fail_url: 'http://localhost:3030/fail',
+                cancel_url: 'http://localhost:3030/cancel',
+                ipn_url: 'http://localhost:3030/ipn',
+                shipping_method: 'Courier',
+                product_name: 'Computer.',
+                product_category: 'Electronic',
+                product_profile: 'general',
+                cus_name: name,
+                cus_email: 'customer@example.com',
+                cus_add1: 'Dhaka',
+                cus_add2: 'Dhaka',
+                cus_city: 'Dhaka',
+                cus_state: 'Dhaka',
+                cus_postcode: '1000',
+                cus_country: 'Bangladesh',
+                cus_phone: '01711111111',
+                cus_fax: '01711111111',
+                ship_name: 'Customer Name',
+                ship_add1: 'Dhaka',
+                ship_add2: 'Dhaka',
+                ship_city: 'Dhaka',
+                ship_state: 'Dhaka',
+                ship_postcode: 1000,
+                ship_country: 'Bangladesh',
+            };
+            // console.log(data);
+            const sslcz = new SSLCommerzPayment(store_id, store_passwd, is_live)
+            sslcz.init(data).then(apiResponse => {
+                // Redirect the user to payment gateway
+                let GatewayPageURL = apiResponse.GatewayPageURL
+                res.redirect(GatewayPageURL)
+                console.log('Redirecting to: ', GatewayPageURL)
+            });
+        }
+    })
+};
+
+exports.successPayment = async (req, res) => {
+    const {tran_id, donorId, sectorId, collectorId, amount, paymentType, paymentGateway} = req.query;
 
     // Insert into the payment table
     const insertPaymentQuery = `
         INSERT INTO payment (donor_id, collector_id, sector_id, donation_date, amount, payment_type, provider, transaction_id)
         VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)`;
 
-    const transaction = generateTransaction(); // Implement a function to generate a unique transaction
-
-    myDB.query(insertPaymentQuery, [donorId, collectorId, sectorId, amount, paymentType, paymentGateway, transaction], (error, result) => {
+    myDB.query(insertPaymentQuery, [donorId, collectorId, sectorId, amount, paymentType, paymentGateway, tran_id], (error, result) => {
         if (error) {
-            console.error('Error inserting into payment:', error);
-            // Handle the error appropriately
+            console.error('payment error');
         } else {
             // Update total_collection in donation_sector table
             const updateTotalCollectionQuery = `
@@ -185,32 +242,30 @@ exports.makeDonation = async (req, res) => {
                 SET total_collection = total_collection + ?
                 WHERE id = ?`;
 
-            myDB.query(updateTotalCollectionQuery, [amount, sectorId], (updateError, updateResult) => {
-                if (updateError) {
-                    console.error('Error updating total_collection:', updateError);
-                    // Handle the error appropriately
+            myDB.query(updateTotalCollectionQuery, [amount, sectorId], async (err, updateResult) => {
+                if (err) {
+                    console.error('Update Error');
                 } else {
-                    // Redirect to a suitable page after making the donation
                     res.redirect('/'); // Replace with your desired destination
                 }
             });
         }
     });
-};
-
-const crypto = require('crypto');
-function generateTransaction() {
-    const transactionLength = 8; // Length of the desired transaction string
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    let transaction = '';
-    for (let i = 0; i < transactionLength; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        transaction += characters[randomIndex];
-    }
-
-    return transaction;
+    
 }
+
+// const crypto = require('crypto');
+// function generateTransaction() {
+//     const transactionLength = 15; // Length of the desired transaction string
+//     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+//     let transaction = '';
+//     for (let i = 0; i < transactionLength; i++) {
+//         const randomIndex = Math.floor(Math.random() * characters.length);
+//         transaction += characters[randomIndex];
+//     }
+//     return transaction;
+// }
 
 exports.recentSectors = async (req, res, next) => {
     if (req.type == 'admin') {
@@ -223,7 +278,7 @@ exports.recentSectors = async (req, res, next) => {
         WHERE is_verified = 1
         ORDER BY creation_date DESC
         LIMIT 4;`;
-        myDB.query(sectorQuery, (error, results) => {
+        myDB.query(sectorQuery, async (error, results) => {
             if (error) {
                 console.error('Error fetching sectors:', error);
             }

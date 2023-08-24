@@ -58,10 +58,8 @@
                 <div class="card">
                     <div class="card-header text-center">Donation Form</div>
                     <div class="card-body">
-                        <form action="/utils/makeDonation" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="donorId" value="{{ user.id }}">
-                            <input type="hidden" name="collectorId" value="{{ sector.collector_id }}">
-                            <input type="hidden" name="sectorId" value="{{ sector.sector_id }}">
+                        <form action="/utils/makeDonation?donorId={{ user.id }}&collectorId={{ sector.collector_id }}&sectorId={{ sector.sector_id }}" method="POST" enctype="multipart/form-data">
+                        
 
                             <div class="mb-3">
                                 <label for="amount" class="form-label">Donation Amount</label>
