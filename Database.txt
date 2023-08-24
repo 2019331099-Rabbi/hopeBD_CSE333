@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS collector (
     phone VARCHAR(255),
     district VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    profile_photo VARCHAR(255),
+    validation_photo VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (email_id) REFERENCES useremail(id) ON DELETE CASCADE
 );
@@ -35,9 +37,11 @@ CREATE TABLE IF NOT EXISTS donation_sector (
     total_collection DECIMAL(10, 2) DEFAULT 0.00,
     slogan TEXT,
     is_verified BOOLEAN DEFAULT 0,
+    photo VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (collector_id) REFERENCES collector(id)
 );
+
 
 CREATE TABLE IF NOT EXISTS payment (
     id INT AUTO_INCREMENT NOT NULL,
