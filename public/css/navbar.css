@@ -1,0 +1,71 @@
+.nav-bar-main {
+  background-color: #cccccc6c;
+  height: 5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 36px;
+  gap: 10px;
+  padding-right: 36px;
+}
+.button-navbar {
+  border: 1px solid rgb(120, 120, 121);
+  width: 6.5rem;
+  height: 1rem;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: bold;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  text-align: center;
+  color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.button-navbar:hover {
+  background-color: #cbc9c9;
+}
+.option-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.link {
+  color: rgb(88, 84, 84);
+  text-decoration: none;
+}
+
+.sign-in-btn {
+  background-color: #ae3ec9;
+}
+.sign-in-btn a {
+  color: white;
+}
+.sign-in-btn:hover {
+  background-color: #9c36b5;
+}
+
+.ecommerce-logo {
+  /* font-family: "inter", sans-serif; */
+  font-size: 1.6rem;
+  color: #9c36b5;
+  font-weight: bold;
+}
+
+.nav-link-a {
+  text-decoration: none;
+  color: #343a40;
+}
+
+.registerBtn {
+  display: flex;
+  gap: 10px;
+}
+.hidden-now {
+  display: none;
+}
+
+.registerContainer {
+  cursor: pointer;
+}

@@ -7,11 +7,55 @@
     <link rel="stylesheet" href="/style.css">
     <script src="https://kit.fontawesome.com/850b77dab2.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/home.css">
     <style>
+        .sector-name {
+            height: 34px;
+            width: 108px;
+            display: block;
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.226);
+            z-index: 10;
+            top: 288px;
+            left: 20px;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 15px;
+            text-align: center;
+        }
+
         .search-container {
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 32px;
+
+
+        }
+
+        .search-bar-input {
+            padding-left: 10px;
+            height: 32px;
+            border-radius: 15px;
+            border: 1px solid gray
+        }
+
+        .search-button {
+            margin-left: 10px;
+            height: 32px;
+            padding: 0 16px;
+            border-radius: 15px;
+            border: 1px solid gray;
         }
 
         .suggestions {
@@ -27,85 +71,89 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">hopeBD</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Home</a>
-                    </li>
-                    {{#if user}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/logout">Logout</a>
-                    </li>
-                    {{else}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Register
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/registerD">Donor</a></li>
-                            <li><a class="dropdown-item" href="/registerC">Collector</a></li>
-                        </ul>
-                    </li>
-                    {{/if}}
-                </ul>
-                <div class="search-container position-relative">
-                    <form class="d-flex" action="/utils/searchCollector" method="post" enctype="multipart/form-data">
-                        <input id="autocomplete_search" class="form-control me-2" type="search" name="searchCQ"
-                            placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                        <input type="hidden" id="selected_collector_id" name="selectedCollectorId">
-                    </form>
-                    <div id="search_result" class="list-group list-group-flush suggestions"></div>
-                </div>
+    <nav class="nav-bar-main">
+
+        <div class="ecommerce-logo" href="#">hopeBD</div>
+
+
+        <div class="option-bar">
+            <div class="button-navbar" style="height: 32px;">
+                <a class="nav-link-a" aria-current="page" href="/">Home</a>
+            </div>
+            {{#if user}}
+            <div class="button-navbar" style="height: 32px;">
+                <a class="nav-link-a" href="/profile">Profile</a>
+            </div>
+            <div class="button-navbar sign-in-btn" style="height: 32px;">
+                <a class="nav-link-a" href="/auth/logout">Logout</a>
+            </div>
+            {{else}}
+            <div class="button-navbar sign-in-btn" style="height: 32px;">
+                <a class="nav-link-a" href="/login">Login</a>
+            </div>
+            <div class="registerContainer button-navbar sign-in-btn" style="height: 32px;">
+                Register
+            </div>
+            <div class="registerBtn hidden-now" style="height: 32px;">
+                <a class="button-navbar nav-link-a" style="height: 32px;" href="/registerD">Donor</a>
+                <a class="button-navbar nav-link-a" style="height: 32px;" href="/registerC">Collector</a>
+            </div>
+            {{/if}}
+            <div class="search-container position-relative">
+                <form class="d-flex" action="/utils/searchCollector" method="post" enctype="multipart/form-data">
+                    <input id="autocomplete_search" class="search-bar-input" type="search" name="searchCQ"
+                        placeholder="Search" aria-label="Search">
+                    <button class="search-button" type="submit">Search</button>
+                    <input type="hidden" id="selected_collector_id" name="selectedCollectorId">
+                </form>
+                <div id="search_result" class="list-group list-group-flush suggestions"></div>
             </div>
         </div>
+
+
     </nav>
 
-    <div class="container mt-4">
-        <div class="row">
+    <div class="rightbar">
+        <div class="rightbar-grid">
             {{#each sectors}}
-            <div class="col-md-6 mb-4">
-                <div class="card h-100" style="width: 18rem;">
-                    {{#if this.photo}}
-                            <img src="/sectorimg/{{this.photo}}" class="card-img-top" alt="avatar" style="width: 70%;">
-                        {{else}}
-                            <img src="/img/org.png" class="card-img-top" alt="avatar" style="width: 70%;">
-                    {{/if}}
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">
-                                {{this.sector_name}}
-                            </h5>
-                            {{#if this.is_verified}}
-                            <div class="icon-container">
-                                <i class="fa-solid fa-square-check text-success fa-lg"></i>
-                            </div>
-                            {{/if}}
+            <div class="first hero">
+                {{#if this.photo}}
+                <img src="/sectorimg/{{this.photo}}" class="hero-profile-img" alt="avatar">
+                {{else}}
+                <img src="/img/org.png" class="hero-profile-img" alt="avatar">
+                {{/if}}
+                <div class="">
+                    <div class="sector-container">
+                        <h5 class="sector-name">
+                            {{this.sector_name}}
+                        </h5>
+                        {{#if this.is_verified}}
+                        {{!-- <div class="verified-btn">
+                            <p class="varified-p">Verified</p>
+                        </div> --}}
+                        <div class="verified-btn">
+                            <i class="fas fa-check-circle"></i>
                         </div>
-                        <p class="card-text overflow-hidden">{{this.slogan}}</p>
+
+                        {{/if}}
                     </div>
-                    <div class="card-footer d-flex justify-content-between align-items-center">
-                        <p class="mb-0">{{this.total_collection}} BDT</p>
-                        <a href="#" class="btn btn-primary donate-btn" data-sector-id="{{this.id}}"
-                            data-collector-id="{{this.collector_id}}">
-                            Donate
-                        </a>
+                    <div class="hero-description-bk"></div>
+                    <div class="hero-logo">
+                        <img src="/img/org.png" alt="" />
                     </div>
+
+                    <div class="hero-description">
+
+                        <p class="hero-description-p">{{this.slogan}}</p>
+                    </div>
+                </div>
+                <div class="raised-announce">{{this.total_collection}} BDT</div>
+
+                <div class="hero-btn">
+                    <a href="#" class="details-btn" data-sector-id="{{this.id}}"
+                        data-collector-id="{{this.collector_id}}">
+                        Donate
+                    </a>
                 </div>
             </div>
             {{/each}}
@@ -115,6 +163,15 @@
     </div>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const registerContainer = document.querySelector('.registerContainer');
+            const registerBtn = document.querySelector('.registerBtn');
+            registerContainer.addEventListener('click', function (event) {
+                registerBtn.classList.toggle('hidden-now');
+            });
+        });
+
         const autocompleteInput = document.getElementById('autocomplete_search');
         const suggestionsDiv = document.getElementById('search_result');
         const selectedCollectorIdInput = document.getElementById('selected_collector_id');
@@ -155,7 +212,7 @@
     </script>
     <script>
         // Get all the "Donate" buttons
-        const donateButtons = document.querySelectorAll('.donate-btn');
+        const donateButtons = document.querySelectorAll('.details-btn');
 
         // Add a click event listener to each "Donate" button
         donateButtons.forEach(button => {

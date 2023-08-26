@@ -6,101 +6,122 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/850b77dab2.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/profileC.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <title>hopeBD</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">hopeBD</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {{!-- <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">Home</a>
-                    </li> --}}
-                    {{#if user}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/logout">Logout</a>
-                    </li>
-                    {{/if}}
-                </ul>
+    <nav class="nav-bar-main">
+        <div class="ecommerce-logo">hopeBD</div>
+        <div class="option-bar">
+
+
+            {{#if user}}
+            <div class="button-navbar">
+                <a class="nav-link-a" href="/profile">Profile</a>
             </div>
+            <div class="button-navbar sign-in-btn">
+                <a class="nav-link-a" href="/auth/logout">Logout</a>
+            </div>
+            {{/if}}
+
         </div>
     </nav>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card" style="width: 18rem;">
-                    <div class="d-flex justify-content-center">
+
+
+
+
+    <div class="container">
+        <div class="container-inside">
+            <div class="sidebar">
+                <div class="sidebar-upper">
+
+                    <div class="sidebar-image">
                         {{#if user.profile_photo}}
-                            <img src="/collectorimg/{{user.profile_photo}}" class="card-img-top" alt="avatar" style="width: 70%;">
+                        <img src=" /collectorimg/{{user.profile_photo}}" class="profile-pic" alt="avatar">
                         {{else}}
-                            <img src="/img/org.png" class="card-img-top" alt="avatar" style="width: 70%;">
+                        <img src=" /img/org.png" class="" alt="avatar">
                         {{/if}}
                     </div>
-                    <div class="card-body d-flex flex-column align-items-center">
-                        <h5 class="card-title text-center">{{user.name}}</h5>
-                        <p class="card-text">{{user.slogan}}</p>
+                    <div class="name-slogan">
+                        <h5 class="">{{user.name}}</h5>
+                        <p class="">{{user.slogan}} This is us, we are for human</p>
                     </div>
-                    <form action="/utils/updateProfilePhoto" method="POST" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="profilePhoto" class="form-label">Profile Photo</label>
-                            <input type="file" name="profilePhoto" id="profilePhoto" accept="image/*"
-                                class="form-control" required>
-                        </div>
 
-                        <input type="hidden" name="collectorId" value="{{user.id}}">
-                        <button type="submit" class="btn btn-primary text-center w-100">Update</button>
+                    <form action=" /utils/updateProfilePhoto" method="POST" enctype="multipart/form-data">
+                        <div class="profile-pic-form-container">
+
+                            <div class="profile-photo-update">
+                                <label for="" class="photo-label"><i class="fas fa-edit"></i></label>
+                                <div class="photouploadfield input-hidden">
+
+                                    <input class="photo-input" type="file" name="profilePhoto" id="profilePhoto"
+                                        accept="image/*" class="" required>
+
+
+                                    <input type="hidden" name="collectorId" value="{{user.id}}">
+                                    <button type="submit" class="profile-photo-update-btn">Update</button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
+
+                <div class="add-new-sector-container">
+
+                    <form action="/utils/newSector" method="POST" enctype="multipart/form-data" class="">
+                        <input type="hidden" name="collectorId" value="{{user.id}}">
+                        <button type="submit">ADD NEW SECTOR</button>
+                    </form>
+
+                </div>
             </div>
-            <div class="col-md-8">
-                <div class="row">
+
+
+            <div class="rightbar">
+                <div class="rightbar-grid">
                     {{#each sectors}}
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100">
-                            <img src="/sectorimg/{{this.photo}}" class="card-img-top" alt="Sector Image">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">
-                                        {{this.sector_name}}
-                                    </h5>
-                                    {{#if this.is_verified}}
-                                    <div class="icon-container">
-                                        <i class="fa-solid fa-square-check text-success fa-lg"></i>
-                                    </div>
-                                    {{/if}}
+
+
+                    <div class="first hero">
+                        <img src="/sectorimg/{{this.photo}}" class="hero-profile-img" alt="Sector Image">
+                        <div class="">
+                            <div class="sector-container">
+                                <h5 class="sector-name">
+                                    {{this.sector_name}}
+                                </h5>
+                                {{#if this.is_verified}}
+                                {{!-- <div class="verified-btn">
+                                    <p class="varified-p">Verified</p>
+                                </div> --}}
+                                <div class="verified-btn">
+                                    <i class="fas fa-check-circle"></i>
                                 </div>
-                                <p class="card-text overflow-hidden">{{this.slogan}}</p>
+
+                                {{/if}}
                             </div>
-                            <div class="card-footer d-flex justify-content-center">
-                                <a href="#" class="btn btn-primary details-btn" data-sector-id="{{this.id}}"
-                                    data-collector-id="{{../user.id}}">Details</a>
+                            <div class="hero-description-bk"></div>
+                            <div class="hero-logo">
+                                <img src="/img/org.png" alt="" />
+                            </div>
+                            <div class="hero-description">
+
+                                <p class="hero-description-p">{{this.slogan}}</p>
                             </div>
                         </div>
+
+                        <div class="raised-announce">
+                            BDT 2000 Raised
+                        </div>
+                        <div class="hero-btn">
+                            <a href="#" class="details-btn" data-sector-id="{{this.id}}"
+                                data-collector-id="{{../user.id}}">DETAILS</a>
+                        </div>
+
+
                     </div>
                     {{/each}}
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body d-flex justify-content-center align-items-center">
-                                <form action="/utils/newSector" method="POST" enctype="multipart/form-data"
-                                    class="card-title">
-                                    <input type="hidden" name="collectorId" value="{{user.id}}">
-                                    <button type="submit" class="btn btn-primary">Add New Sector</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -125,11 +146,21 @@
                 window.location.href = url;
             });
         });
-    </script>
 
+        document.addEventListener('DOMContentLoaded', function () {
+            const profilephoto = document.querySelector('.photo-label');
+            const photouploadField = document.querySelector('.photouploadfield');
+
+            profilephoto.addEventListener('click', function (event) {
+                photouploadField.classList.toggle('input-hidden');
+            });
+        });
+
+    </script>
+    {{!--
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script> --}}
 </body>
 
 </html>
