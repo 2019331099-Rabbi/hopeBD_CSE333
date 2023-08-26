@@ -28,10 +28,6 @@
 
         </div>
     </nav>
-
-
-
-
     <div class="container">
         <div class="container-inside">
             <div class="sidebar">
@@ -82,8 +78,6 @@
             <div class="rightbar">
                 <div class="rightbar-grid">
                     {{#each sectors}}
-
-
                     <div class="first hero">
                         <img src="/sectorimg/{{this.photo}}" class="hero-profile-img" alt="Sector Image">
                         <div class="">
@@ -112,14 +106,12 @@
                         </div>
 
                         <div class="raised-announce">
-                            BDT 2000 Raised
+                            {{this.total_collection}} Raised
                         </div>
                         <div class="hero-btn">
                             <a href="#" class="details-btn" data-sector-id="{{this.id}}"
                                 data-collector-id="{{../user.id}}">DETAILS</a>
                         </div>
-
-
                     </div>
                     {{/each}}
                 </div>

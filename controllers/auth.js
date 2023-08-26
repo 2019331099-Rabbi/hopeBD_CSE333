@@ -215,6 +215,7 @@ exports.isLoggedIn = async (req, res, next) => {
                             ds.id AS sector_id,
                             ds.collector_id,
                             ds.sector_name,
+                            ds.total_collection,
                             c.name AS collector_name
                         FROM
                             donation_sector ds

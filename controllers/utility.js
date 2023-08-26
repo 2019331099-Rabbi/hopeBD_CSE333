@@ -142,6 +142,10 @@ exports.sectorDetails = async (req, res) => {
     // Fetch the sector information from the donation_sector table
     const sectorQuery = 'SELECT * FROM donation_sector WHERE id = ? and collector_id = ?';
     const userQuery = 'SELECT * FROM collector WHERE id = ?';
+    const paymentQuery = `SELECT p.amount, p.transaction_id, d.name
+    FROM payment p
+    INNER JOIN donor d ON p.donor_id = d.id
+    WHERE p.collector_id = ? AND p.sector_id = ?;`;
 
     myDB.query(sectorQuery, [sectorId, collectorId], (error, sectorResults) => {
         if (error) {
@@ -154,12 +158,22 @@ exports.sectorDetails = async (req, res) => {
                 console.error('Error fetching collector details:', error);
                 return res.status(500).send('Error fetching collector details');
             }
-            const userDetails = collectorResults[0];
-            res.render('sectorDetails', {
-                sector: sectorDetails,
-                user: userDetails,
-                collectorId: collectorId
-            });
+
+            myDB.query(paymentQuery, [collectorId, sectorId], (error, paymentResults) => {
+                if (error) {
+                    console.error('Error fetching collector details:', error);
+                    return res.status(500).send('Error fetching collector details');
+                }
+                // console.log(collectorId, sectorId);
+                // console.log(paymentResults);
+                const userDetails = collectorResults[0];
+                res.render('sectorDetails', {
+                    sector: sectorDetails,
+                    user: userDetails,
+                    collectorId: collectorId,
+                    paymentResults: paymentResults,
+                });
+            })
         });
     });
 }
@@ -170,7 +184,7 @@ const store_passwd = 'hopeb64e608aeca1ed@ssl'
 const is_live = false //true for live, false for sandbox
 
 exports.makeDonation = async (req, res) => {
-    const {amount, paymentType, paymentGateway } = req.body;
+    const { amount, paymentType, paymentGateway } = req.body;
     const donorId = req.query.donorId;
     const collectorId = req.query.collectorId;
     const sectorId = req.query.sectorId;
@@ -225,7 +239,7 @@ exports.makeDonation = async (req, res) => {
 };
 
 exports.successPayment = async (req, res) => {
-    const {tran_id, donorId, sectorId, collectorId, amount, paymentType, paymentGateway} = req.query;
+    const { tran_id, donorId, sectorId, collectorId, amount, paymentType, paymentGateway } = req.query;
 
     // Insert into the payment table
     const insertPaymentQuery = `
@@ -251,21 +265,8 @@ exports.successPayment = async (req, res) => {
             });
         }
     });
-    
+
 }
-
-// const crypto = require('crypto');
-// function generateTransaction() {
-//     const transactionLength = 15; // Length of the desired transaction string
-//     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-//     let transaction = '';
-//     for (let i = 0; i < transactionLength; i++) {
-//         const randomIndex = Math.floor(Math.random() * characters.length);
-//         transaction += characters[randomIndex];
-//     }
-//     return transaction;
-// }
 
 exports.recentSectors = async (req, res, next) => {
     if (req.type == 'admin') {

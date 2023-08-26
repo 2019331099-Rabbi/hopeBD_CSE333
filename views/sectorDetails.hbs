@@ -69,30 +69,21 @@
 
         </div>
         <div class="table-container">
+            {{#each paymentResults}}
             <div class="table-data">
 
                 <div class="name">
-                    Donor Name: Arifl
+                    Donor Name: {{this.name}}
                 </div>
                 <div class="amount">
-                    Amount: 100
+                    Amount: {{this.amount}}
                 </div>
                 <div class="tran-id">
-                    Transaction: asdfaj;lsdkfjals
+                    Transaction: {{this.transaction_id}}
                 </div>
             </div>
-            <div class="table-data">
-
-                <div class="name">
-                    Donor Name: Arifl
-                </div>
-                <div class="amount">
-                    Amount: 100
-                </div>
-                <div class="tran-id">
-                    Transaction: asdfaj;lsdkfjals
-                </div>
-            </div>
+            {{/each}}
+            
         </div>
 
     </div>
