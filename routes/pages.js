@@ -4,8 +4,9 @@ const authController = require('../controllers/auth');
 const utils = require('../controllers/utility');
 
 router.post('/', (req, res) => {
-    const categories = req.body.categories;
-    req.session.selectedCategories = categories;
+    const category = req.body.category;
+    req.session.selectedCategory = category;
+    console.log(req.session.selectedCategory);
     res.redirect('/');
 })
 
@@ -17,7 +18,7 @@ router.get("/", authController.isLoggedIn, utils.recentSectors, (req, res) => {
         })
     }
     else {
-        
+
         res.render("home", {
             user: req.user,
             sectors: req.sectors

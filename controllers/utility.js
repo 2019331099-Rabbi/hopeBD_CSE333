@@ -294,11 +294,11 @@ exports.recentSectors = async (req, res, next) => {
         next();
     }
     else {
-        const selectedCategories = req.session.selectedCategories || [];
-        req.session.selectedCategories = [];
+        const selectedCategory = req.session.selectedCategory;
+        req.session.selectedCategory = '';
 
         let category;
-        if (selectedCategories.length) category = selectedCategories;
+        if (selectedCategory) category = selectedCategory;
         else category = 'All';
 
         const sectorQuery = (category !== 'All') ? (`
@@ -317,7 +317,6 @@ exports.recentSectors = async (req, res, next) => {
                 console.error('Error fetching sectors:', error);
             }
             else {
-                console.log(results[0]);
                 req.sectors = results;
                 next();
             }
