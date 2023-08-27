@@ -58,3 +58,20 @@ CREATE TABLE IF NOT EXISTS payment (
     FOREIGN KEY (collector_id) REFERENCES collector(id),
     FOREIGN KEY (sector_id) REFERENCES donation_sector(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS sector_verification_photo (
+    id INT AUTO_INCREMENT NOT NULL,
+    sector_id INT NOT NULL,
+    photo_path VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (sector_id) REFERENCES donation_sector(id) ON DELETE CASCADE
+);
+
+-- Create the sector_categories table with ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS sector_categories (
+    id INT AUTO_INCREMENT NOT NULL,
+    sector_id INT NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (sector_id) REFERENCES donation_sector(id) ON DELETE CASCADE
+);
