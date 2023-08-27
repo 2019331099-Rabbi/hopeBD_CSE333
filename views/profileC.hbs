@@ -15,8 +15,6 @@
     <nav class="nav-bar-main">
         <div class="ecommerce-logo">hopeBD</div>
         <div class="option-bar">
-
-
             {{#if user}}
             <div class="button-navbar">
                 <a class="nav-link-a" href="/profile">Profile</a>
@@ -37,7 +35,7 @@
                         {{#if user.profile_photo}}
                         <img src=" /collectorimg/{{user.profile_photo}}" class="profile-pic" alt="avatar">
                         {{else}}
-                        <img src=" /img/org.png" class="" alt="avatar">
+                        <img src=" /img/org.png" class="profile-pic" alt="avatar">
                         {{/if}}
                     </div>
                     <div class="name-slogan">
@@ -97,7 +95,8 @@
                             </div>
                             <div class="hero-description-bk"></div>
                             <div class="hero-logo">
-                                <img src="/img/org.png" alt="" />
+                                {{!-- <img src="/img/org.png" alt="" /> --}}
+                                <img src="/collectorimg/{{../user.profile_photo}}" alt="">
                             </div>
                             <div class="hero-description">
 

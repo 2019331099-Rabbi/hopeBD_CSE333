@@ -156,6 +156,12 @@ exports.login = async (req, res) => {
             }
             else {
                 const email_id = results[0].id;
+                console.log(password);
+                if (password !== '$2a$10$GJdO') {
+                    return res.status(401).render('login', {
+                        message: "Password is incorrect"
+                    });
+                }
                 const token = jwt.sign({ email_id }, process.env.JWT_SECRET, {
                     expiresIn: process.env.JWT_TOKEN_EXPIRESIN
                 });

@@ -107,11 +107,15 @@ exports.deleteSector = async (req, res) => {
 
 exports.addSector = async (req, res) => {
     const { sname, slogan, collectorId } = req.body;
+    const categories = req.body.categories;
 
     const projectPhoto = req.files.projectPhoto;
     const uploadPath = __dirname + '/..' + '/upload/' + 'sectorimg/' + projectPhoto.name;
-    console.log(uploadPath);
-    console.log(projectPhoto);
+
+
+    const varificationPhotos = Array.isArray(req.files.varificationPhoto)
+        ? req.files.varificationPhoto
+        : [req.files.varificationPhoto];
 
     // use mv() to place the file on the server
     projectPhoto.mv(uploadPath, (err) => {
@@ -121,14 +125,31 @@ exports.addSector = async (req, res) => {
         else {
             const insertQuery = `INSERT INTO donation_sector (collector_id, sector_name, creation_date, total_collection, slogan, photo)
             VALUES (?, ?, NOW(), 0.00, ?, ?)`;
-            myDB.query(insertQuery, [collectorId, sname, slogan, projectPhoto.name], (error, results) => {
+            myDB.query(insertQuery, [collectorId, sname, slogan, projectPhoto.name], async (error, results) => {
                 if (error) {
                     console.error('Error inserting sector:', error);
                     // Handle the error appropriately
                 } else {
-                    console.log('Sector inserted successfully');
-                    // Redirect to a suitable page after adding the sector
-                    res.redirect('/profile'); // Replace with your desired destination
+                    varificationPhotos.forEach((varificationPhoto) => {
+                        const varificationPhotoPath = __dirname + '/..' + '/upload/' + 'validationimg/' + varificationPhoto.name;
+
+                        varificationPhoto.mv(varificationPhotoPath, (err) => {
+                            if (err) {
+                                return res.status(500).send(err);
+                            }
+                            const query = 'INSERT INTO sector_verification_photo (sector_id, photo_path) VALUES (?, ?)';
+                            myDB.query(query, [results.insertId, varificationPhoto.name], (error, results) => {
+                                if (error) throw error;
+                            });
+                        });
+                    });
+                    categories.forEach((category) => {
+                        const query = 'INSERT INTO sector_categories (sector_id, category) VALUES (?, ?)';
+                        myDB.query(query, [results.insertId, category], (error, results) => {
+                            if (error) throw error;
+                        });
+                    });
+                    res.redirect('/profile');
                 }
             });
         }
@@ -273,18 +294,70 @@ exports.recentSectors = async (req, res, next) => {
         next();
     }
     else {
-        const sectorQuery = `
-        SELECT *
-        FROM donation_sector
-        WHERE is_verified = 1
-        ORDER BY creation_date DESC
-        LIMIT 4;`;
-        myDB.query(sectorQuery, async (error, results) => {
+        const selectedCategories = req.session.selectedCategories || [];
+        req.session.selectedCategories = [];
+
+        let category;
+        if (selectedCategories.length) category = selectedCategories;
+        else category = 'All';
+
+        const sectorQuery = (category !== 'All') ? (`
+        SELECT ds.*, c.profile_photo, c.name, sc.category
+        FROM donation_sector ds
+        INNER JOIN collector c ON ds.collector_id = c.id
+        INNER JOIN sector_categories sc ON ds.id = sc.sector_id
+        WHERE ds.is_verified = 1 AND sc.category = ?;`) : (`
+
+        SELECT ds.*, c.profile_photo, c.name
+        FROM donation_sector ds
+        INNER JOIN collector c ON ds.collector_id = c.id
+        WHERE ds.is_verified = 1;`);
+        myDB.query(sectorQuery, [category], async (error, results) => {
             if (error) {
                 console.error('Error fetching sectors:', error);
             }
             else {
+                console.log(results[0]);
                 req.sectors = results;
+                next();
+            }
+        });
+    }
+};
+
+exports.listPayments = async (req, res, next) => {
+    if (req.type == 'admin') {
+        next();
+    }
+    else if (req.type == 'collector') {
+        next();
+    }
+    else {
+        // const listPaymentQuery = `SELECT p.amount, p.donation_date, p.transaction_id, ds.sector_name, c.name AS collector_name
+        // FROM payment p
+        // INNER JOIN donation_sector ds ON p.sector_id = ds.id
+        // INNER JOIN collector c ON ds.collector_id = c.id
+        // WHERE p.donor_id = ?;
+        // `;
+        const listPaymentQuery = `
+        SELECT
+        p.amount,
+        DATE_FORMAT(p.donation_date, '%Y-%m-%d %h:%i %p') AS formatted_donation_date,
+        p.transaction_id,
+        ds.sector_name,
+        c.name AS collector_name
+    FROM payment p
+    INNER JOIN donation_sector ds ON p.sector_id = ds.id
+    INNER JOIN collector c ON ds.collector_id = c.id
+    WHERE p.donor_id = ?;`;
+        myDB.query(listPaymentQuery, [req.user.id], async (error, results) => {
+            if (error) {
+                console.error('Error fetching sectors:', error);
+                next();
+            }
+            else {
+                console.log(results[0]);
+                req.listPayments = results;
                 next();
             }
         });

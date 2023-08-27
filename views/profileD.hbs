@@ -49,19 +49,28 @@
                 </div>
             </div>
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header text-center">
-                        Profile page
-                    </div>
-                    <div class="card-body  d-flex flex-column align-items-center">
-                        <h5 class="card-title">Hey {{user.name}}: Welcome back</h5>
-                        <p class="card-text">This is the profile page. You can add anything.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                    <div class="card-footer text-muted text-center">
-                        Spread Love
-                    </div>
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Collector Name</th>
+                            <th scope="col">Sector Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Trn ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each listPayments}}
+                        <tr>
+                            <td>{{this.collector_name}}</td>
+                            <td>{{this.sector_name}}</td>
+                            <td>{{this.formatted_donation_date}}</td>
+                            <td>{{this.amount}}</td>
+                            <td>{{this.transaction_id}}</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

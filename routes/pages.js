@@ -3,6 +3,12 @@ const router = express.Router();
 const authController = require('../controllers/auth');
 const utils = require('../controllers/utility');
 
+router.post('/', (req, res) => {
+    const categories = req.body.categories;
+    req.session.selectedCategories = categories;
+    res.redirect('/');
+})
+
 router.get("/", authController.isLoggedIn, utils.recentSectors, (req, res) => {
     if (req.type == 'admin') {
         res.render("adminHome", {
@@ -11,6 +17,7 @@ router.get("/", authController.isLoggedIn, utils.recentSectors, (req, res) => {
         })
     }
     else {
+        
         res.render("home", {
             user: req.user,
             sectors: req.sectors
@@ -30,13 +37,12 @@ router.get("/login", (req, res) => {
     res.render('login');
 });
 
-router.get("/profile", authController.isLoggedIn, (req, res) => {
+router.get("/profile", authController.isLoggedIn, utils.listPayments, (req, res) => {
     if (req.user) {
-        console.log(req.user);
         if (req.type === 'donor') {
-            console.log(req.user);
             res.render("profileD", {
-                user: req.user
+                user: req.user,
+                listPayments: req.listPayments
             });
         }
         else {

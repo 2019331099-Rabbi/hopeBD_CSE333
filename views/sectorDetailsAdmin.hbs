@@ -74,7 +74,7 @@
             </div>
             <div class="info-container">
 
-                <div class="details-info"><span class="info-title">Address: </span>a{{sector.district}}</div>
+                <div class="details-info"><span class="info-title">Address: </span>{{sector.district}}</div>
             </div>
             <div class="info-container">
 
@@ -85,7 +85,7 @@
             </div>
             <button class="showValidationImage">
 
-                NID pic
+                Documents
             </button>
         </div>
     </div>
@@ -93,8 +93,10 @@
 
     {{!-- NID PHOTO ADD --}}
     <div class="validation-pic hide-now">
-
-        <img src="/sector1.jpg" alt="validation_photo">
+        {{#each validationPhotos}}
+        <img src="/validationimg/{{this.photo_path}}" alt="Validation Photo">
+        {{/each}}
+        {{!-- <img src="/sector1.jpg" alt="validation_photo"> --}}
     </div>
     <div class="underButtons">
 

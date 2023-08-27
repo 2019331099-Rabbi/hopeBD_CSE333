@@ -35,21 +35,61 @@
       <div class="col-md-3"></div>
       <div class="col-md-6">
         <div class="card">
-          <div class="card-header text-center">Register Form</div>
+          <div class="card-header text-center">Donation Request</div>
           <div class="card-body">
             <form action="/utils/addSector" method="POST" enctype="multipart/form-data">
               <div class="mb-3">
-                <label for="sname" class="form-label">Sector Name</label>
+                <label for="sname" class="form-label">Request Title</label>
                 <input type="text" class="form-control" id="sname" name="sname" placeholder="Enter your name"
                   required />
               </div>
               <div class="mb-3">
-                <label for="projectPhoto" class="form-label">Project Photo</label>
+                <label class="form-label">Categories</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category1" name="categories" value="Medical">
+                  <label class="form-check-label" for="category1">Medical</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category2" name="categories" value="Education">
+                  <label class="form-check-label" for="category2">Education</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category3" name="categories" value="Poverty Alleviation">
+                  <label class="form-check-label" for="category3">Poverty Alleviation</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category4" name="categories" value="Animal Welfare">
+                  <label class="form-check-label" for="category4">Animal Welfare</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category5" name="categories" value="Disaster Relief">
+                  <label class="form-check-label" for="category5">Disaster Relief</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category4" name="categories" value="Scholarships">
+                  <label class="form-check-label" for="category4">Scholarships</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category5" name="categories" value="Tree Planting">
+                  <label class="form-check-label" for="category5">Tree Planting</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="category5" name="categories" value="Places of Worship">
+                  <label class="form-check-label" for="category5">Places of Worship</label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="projectPhoto" class="form-label">Cover Picture</label>
                 <input type="file" name="projectPhoto" id="projectPhoto" accept="image/*" class="form-control"
                   required />
               </div>
               <div class="mb-3">
-                <label for="slogan" class="form-label">Slogan</label>
+                <label for="varificationPhoto" class="form-label">Verification Photos</label>
+                <input type="file" name="varificationPhoto" id="varificationPhoto" accept="image/*" class="form-control"
+                  multiple required />
+              </div>
+              <div class="mb-3">
+                <label for="slogan" class="form-label">Description</label>
                 <textarea name="slogan" id="slogan" class="form-control" placeholder="Write your message" cols="30"
                   rows="4" required></textarea>
               </div>

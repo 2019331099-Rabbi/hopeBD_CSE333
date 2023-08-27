@@ -28,16 +28,27 @@ router.get('/sectorDetails', authController.isLoggedIn, (req, res) => {
     INNER JOIN collector c ON ds.collector_id = c.id
     WHERE ds.id = ?;`;
 
+    const validationQuery = `SELECT photo_path
+    FROM sector_verification_photo
+    WHERE sector_id = ?;`;
+
     myDB.query(sectorQuery, [sectorId], (error, sectorResult) => {
         if (error) {
             console.error('Error fetching sector details:', error);
             return res.status(500).send('Error fetching sector details');
         }
-        console.log(sectorResult);
-        res.render('sectorDetailsAdmin', {
-            sector: sectorResult[0],
-            user_name: req.user_name
-        });
+        // console.log(sectorResult);
+        myDB.query(validationQuery, [sectorId], async (error, validationResults) => {
+            if (error) {
+                console.error('Error fetching sector details:', error);
+                return res.status(500).send('Error fetching sector details');
+            }
+            res.render('sectorDetailsAdmin', {
+                sector: sectorResult[0],
+                user_name: req.user_name,
+                validationPhotos: validationResults
+            });
+        })
     });
 });
 

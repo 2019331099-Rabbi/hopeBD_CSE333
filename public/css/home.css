@@ -340,4 +340,17 @@ body {
 /*  */
 /*  */
 /*  */
-/* Navbar */
+/* categories */
+
+.filterContainer{
+  display: flex;
+  justify-content: end;
+}
+
+.filter-for-categories{
+  width: 200px;
+  margin: 48px 48px 48px 0px;
+  
+
+  
+}

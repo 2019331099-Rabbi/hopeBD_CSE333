@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/navbar.css">
     <title>hopeBD</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    {{!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -39,6 +40,37 @@
                 </ul>
             </div>
         </div>
+    </nav> --}}
+    <nav class="nav-bar-main">
+        <div class="ecommerce-logo" href="#">hopeBD</div>
+        <div class="option-bar" id="navbarSupportedContent">
+            <div class="option-bar">
+                <div class="button-navbar" style="height: 32px;">
+                    <a class="nav-link-a" aria-current="page" href="/">Home</a>
+                </div>
+                {{#if user}}
+                <div class="button-navbar" style="height: 32px;">
+                    <a class="nav-link-a" href="/profile">Profile</a>
+                </div>
+                <div class="button-navbar sign-in-btn" style="height: 32px;">
+                    <a class="nav-link-a" href="/auth/logout">Logout</a>
+                </div>
+                {{else}}
+                <div class="button-navbar" style="height: 32px;">
+                    <a class="nav-link-a" href="/login">Login</a>
+                </div>
+
+                <div class="registerContainer button-navbar sign-in-btn" style="height: 32px;">
+                    Register
+                </div>
+                <div class="registerBtn hidden-now">
+                    <a class="button-navbar nav-link-a " style="height: 32px;" href="/registerD">Donor</a>
+                    <a class="button-navbar nav-link-a" style="height: 32px;" href="/registerC">Collector</a>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+
     </nav>
     <div class="container mt-4">
         <div class="row">
@@ -79,6 +111,15 @@
             <div class="col-md-3"></div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const registerContainer = document.querySelector('.registerContainer');
+            const registerBtn = document.querySelector('.registerBtn');
+            registerContainer.addEventListener('click', function (event) {
+                registerBtn.classList.toggle('hidden-now');
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 
