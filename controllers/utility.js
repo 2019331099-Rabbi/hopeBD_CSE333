@@ -107,7 +107,12 @@ exports.deleteSector = async (req, res) => {
 
 exports.addSector = async (req, res) => {
     const { sname, slogan, collectorId } = req.body;
-    const categories = req.body.categories;
+    // const categories = req.body.categories;
+    // categories.forEach(element => {
+    //     console.log(element);
+    // });
+    // res.send("success");
+
 
     const projectPhoto = req.files.projectPhoto;
     const uploadPath = __dirname + '/..' + '/upload/' + 'sectorimg/' + projectPhoto.name;
@@ -138,11 +143,16 @@ exports.addSector = async (req, res) => {
                                 return res.status(500).send(err);
                             }
                             const query = 'INSERT INTO sector_verification_photo (sector_id, photo_path) VALUES (?, ?)';
-                            myDB.query(query, [results.insertId, varificationPhoto.name], (error, results) => {
+                            myDB.query(query, [results.insertId, varificationPhoto.name], async (error, results) => {
                                 if (error) throw error;
                             });
                         });
                     });
+                    if (req.body.categories && !Array.isArray(req.body.categories)) {
+                        req.body.categories = [req.body.categories];
+                    }
+                    const categories = req.body.categories;
+                    console.log(categories);
                     categories.forEach((category) => {
                         const query = 'INSERT INTO sector_categories (sector_id, category) VALUES (?, ?)';
                         myDB.query(query, [results.insertId, category], (error, results) => {

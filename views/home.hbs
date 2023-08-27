@@ -94,6 +94,7 @@
             <div class="registerContainer button-navbar sign-in-btn" style="height: 32px;">
                 Register
             </div>
+            
             <div class="registerBtn hidden-now" style="height: 32px;">
                 <a class="button-navbar nav-link-a" style="height: 32px;" href="/registerD">Donor</a>
                 <a class="button-navbar nav-link-a" style="height: 32px;" href="/registerC">Collector</a>
@@ -104,7 +105,7 @@
                     <input id="autocomplete_search" class="search-bar-input" type="search" name="searchCQ"
                         placeholder="Search" aria-label="Search">
                     <button class="search-button" type="submit">Search</button>
-                    <label class="search-button">Categories</label>
+                    
                     <input type="hidden" id="selected_collector_id" name="selectedCollectorId">
                 </form>
                 <div id="search_result" class="list-group list-group-flush suggestions"></div>
@@ -113,10 +114,11 @@
 
 
     </nav>
-    <div class="filterContainer">
+        {{!-- <div class="horizontal-line"></div> --}}
+        <div class="categories-button">Select Categories</div>
+        <div class="filterContainer" >
 
-
-        <div class="filter-for-categories">
+        <div class="filter-for-categories input-hidden">
             <form action="/" method="POST" enctype="multipart/form-data">
 
                 <div class="">
@@ -156,7 +158,7 @@
 
                 </div>
                 <input type="hidden" name="collectorId" value="{{user.id}}" />
-                <button type="submit" class="btn btn-primary text-center w-100">Add</button>
+                <button type="submit" class="search-button search-btn-cat">Search</button>
             </form>
 
         </div>
@@ -220,6 +222,13 @@
             const registerBtn = document.querySelector('.registerBtn');
             registerContainer.addEventListener('click', function (event) {
                 registerBtn.classList.toggle('hidden-now');
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoriesbutton = document.querySelector('.categories-button');
+            const filterforcategories = document.querySelector('.filter-for-categories');
+            categoriesbutton.addEventListener('click', function (event) {
+                filterforcategories.classList.toggle('input-hidden');
             });
         });
 
